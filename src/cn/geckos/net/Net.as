@@ -28,17 +28,19 @@ public class Net
 		var params:Object = { };
 		switch(id)
 		{
-			case 1:
-				params.str = bytes.readUTFBytes(bytes.bytesAvailable);
+			case Protocols.LOGIN:
+				params.str = bytes.readUTFBytes(3);
+				trace("bytes.length", bytes.length, bytes.bytesAvailable);
+				params.index = bytes.readInt();
+				params.index2 = bytes.readInt();
 				//readUTF writeUTF 会带2位长度的。
 				//head:一个16为的整数表示之后字符串的字节数。
 				//body:字符串的字节流. (这里的汉字用3个字节表示)。
-				trace("params.str", params.str);
 				break;
 			case 2:
 				break;
 		}
-		//Message.getInstance().execute(id, params);
+		Message.getInstance().execute(id, params);
 	}
 	
 	/**

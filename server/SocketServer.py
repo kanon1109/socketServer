@@ -35,7 +35,7 @@ class SocketFactory(Factory):
     def login(self, client):
         #pass
         self.clientMap[client] = client
-        self.send(client, write_data(1, "akb48"))
+        self.send(client, write_multi_data(1, ["akb", 1, 48]))
 
     #向客户端发消息
     def send(self, c, msg):
@@ -57,8 +57,31 @@ def write_data(id, data):
     elif type(data) == types.IntType:
         ba.writeInt(data)
     elif type(data) == types.BooleanType:
-        ba.writeDouble(data)
+        ba.writeBoolean(data)
     return ba.data
+
+#写入多个数据
+def write_multi_data(id, params):
+    length = getBytesLen(id)
+    for i in range(0, len(params)):
+        length += getBytesLen(params[i])
+    ba = ByteArray()
+    ba.endian = '!'
+    ba.writeInt(length)
+    ba.writeInt(id)
+    #根据data类型 写入ba
+    for i in range(0, len(params)):
+        data = params[i]
+        if type(data) == types.StringType:
+           ba.writeUTFBytes(data)
+        elif type(data) == types.IntType:
+           ba.writeInt(data)
+        elif type(data) == types.BooleanType:
+           ba.writeBoolean(data)
+    return ba.data
+    
+    
+
 
 #获取数据的字节长度
 def getBytesLen(data):
@@ -71,9 +94,13 @@ def getBytesLen(data):
        b.writeDouble(data)
     return len(b.data)
 
+
 def main():
     reactor.listenTCP(8000, SocketFactory())
     reactor.run()
+   
 
 if __name__ == "__main__":
     main()
+
+print write_multi_data(1, ["as", "s", 1])

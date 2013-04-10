@@ -26,7 +26,7 @@ public class Message extends EventDispatcher
 	 * @param	message 消息名
 	 * @param	callback
 	 */
-	public function addMsgListener(message:String, callback:Function):void
+	public function addMsgListener(message:*, callback:Function):void
 	{
 		if (message && !this.dictionary[message] && callback is Function)
 			this.dictionary[message] = callback;
@@ -40,8 +40,10 @@ public class Message extends EventDispatcher
 	public function execute(message:*, ...reset):void
 	{
 		if (this.dictionary && this.dictionary[message] is Function)
+		{
 			var fun:Function = this.dictionary[message] as Function;
 			fun.apply(null, reset);
+		}
 	}
 	
 	/**
