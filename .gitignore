@@ -5,6 +5,8 @@ bin-release/
 /bin/*
 /all/*
 /≤‚ ‘/*
+/server/*.pyc
+/test/*.pyc
 *.swf
 *.fla
 *.png
@@ -13,6 +15,7 @@ bin-release/
 *.txt
 *.html
 *.m4v
+*.pyc
 .actionScriptProperties
 .flexProperties
 .flashProjectProperties
@@ -23,6 +26,7 @@ bin-release/
 .sourceMate
 .fxpProperties
 .svn
+
 # Other files and folders
 .settings/
 

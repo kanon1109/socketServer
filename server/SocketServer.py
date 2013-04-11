@@ -11,7 +11,7 @@ import Protocols
 class SocketServer(Protocol):
     #初始化 构造函数 将类内的属性在此初始化
     def __init__(self):
-        return
+        pass
     #客户端链接成功
     def connectionMade(self):
         print "login", self.transport.client
@@ -42,9 +42,11 @@ class SocketFactory(Factory):
         c.transport.write(msg)
 
 #写入数据
+#id 协议号
+#data 需要写入的数据
 def write_data(id, data):
     #获取协议号 + 内容 以后的长度
-    length = getBytesLen(id) + getBytesLen(data)
+    length = get_bytes_len(id) + get_bytes_len(data)
     print id, length, data
     ba = ByteArray()
     ba.endian = '!'
@@ -52,19 +54,16 @@ def write_data(id, data):
     ba.writeInt(id)
     #print type(data)
     #根据data类型 写入ba
-    if type(data) == types.StringType:
-        ba.writeUTFBytes(data)
-    elif type(data) == types.IntType:
-        ba.writeInt(data)
-    elif type(data) == types.BooleanType:
-        ba.writeBoolean(data)
+    write_data_in_bytes(ba, data)
     return ba.data
 
 #写入多个数据
+#id 协议号
+#params 一个存放数据的列表
 def write_multi_data(id, params):
-    length = getBytesLen(id)
+    length = get_bytes_len(id)
     for i in range(0, len(params)):
-        length += getBytesLen(params[i])
+        length += get_bytes_len(params[i])
     ba = ByteArray()
     ba.endian = '!'
     ba.writeInt(length)
@@ -72,33 +71,33 @@ def write_multi_data(id, params):
     #根据data类型 写入ba
     for i in range(0, len(params)):
         data = params[i]
-        if type(data) == types.StringType:
-           ba.writeUTFBytes(data)
-        elif type(data) == types.IntType:
-           ba.writeInt(data)
-        elif type(data) == types.BooleanType:
-           ba.writeBoolean(data)
+        write_data_in_bytes(ba, data)
     return ba.data
-    
-    
+
+#将一个数据写入byteArray
+#byteArray  字节数组
+#data       需要写入的数据
+def write_data_in_bytes(byteArray, data):
+    if type(data) == types.StringType:
+        byteArray.writeUTFBytes(data)
+    elif type(data) == types.IntType:
+        byteArray.writeInt(data)
+    elif type(data) == types.BooleanType:
+        byteArray.writeBoolean(data)
+    return byteArray.data
 
 
 #获取数据的字节长度
-def getBytesLen(data):
+#data 需要获取长度的数据
+def get_bytes_len(data):
     b = ByteArray()
-    if type(data) == types.StringType:
-       b.writeUTFBytes(data)
-    elif type(data) == types.IntType:
-       b.writeInt(data)
-    elif type(data) == types.BooleanType:
-       b.writeDouble(data)
+    write_data_in_bytes(b, data)
     return len(b.data)
-
 
 def main():
     reactor.listenTCP(8000, SocketFactory())
     reactor.run()
-   
+
 
 if __name__ == "__main__":
     main()
