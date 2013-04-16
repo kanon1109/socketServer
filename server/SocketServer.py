@@ -22,7 +22,7 @@ class SocketServer(Protocol):
 
     def dataReceived(self, data):
         #pass
-        print "data", data
+        read_data(data)
 
 class SocketFactory(Factory):
     protocol = SocketServer
@@ -87,6 +87,26 @@ def write_data_in_bytes(byteArray, data):
     return byteArray.data
 
 
+def read_data(data):
+    ba = ByteArray(data)
+    length = ba.readInt()
+    #业务大类
+    actionName = ba.readByte()
+    #具体业务类型
+    type = ba.readByte()
+    
+    print "actionName", actionName
+    print "type", type
+    
+    str = ba.readUTFBytes(1)
+    print str
+    i = ba.readInt()
+    print i
+    
+   
+    
+    
+
 #获取数据的字节长度
 #data 需要获取长度的数据
 def get_bytes_len(data):
@@ -101,5 +121,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-print write_multi_data(1, ["as", "s", 1])

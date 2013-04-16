@@ -24,6 +24,7 @@ public class SocketServerTest extends Sprite
 	private function loginHandler(obj:Object):void 
 	{
 		trace("loginHandler", obj.str, obj.index, obj.index2);
+		Net.send(3, 4, "a", 7);
 	}
 	
 }

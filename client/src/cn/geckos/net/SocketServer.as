@@ -66,7 +66,9 @@ public class SocketServer
 			//先写入长度
 			dataBytes.writeInt(bytes.length);
 			//再写入内容
+			trace("bytes", bytes.length);
 			dataBytes.writeBytes(bytes);
+			trace("dataBytes", dataBytes.length);
 			this.socket.writeBytes(dataBytes);
 			this.socket.flush();
 		}

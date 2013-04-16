@@ -54,14 +54,14 @@ public class Net
 		var bytes:ByteArray = new ByteArray();
 		bytes.writeByte(actionName);
 		bytes.writeByte(type);
-		if (params)
+		if (reset)
 		{
 			for each(var params:* in reset) 
 			{
 				if (params is int)
 					bytes.writeInt(int(params));
 				else if (params is String)
-					bytes.writeUTF(String(params));
+					bytes.writeUTFBytes(String(params));
 			}		
 		}
 		Net.socketServer.send(bytes);
