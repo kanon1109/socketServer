@@ -101,5 +101,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-print write_multi_data(1, ["as", "s", 1])
