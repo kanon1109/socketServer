@@ -47,7 +47,7 @@ public class Net
 	 * 发送消息
 	 * @param	actionName   业务大类
 	 * @param	type		 大类中的具体业务类型
-	 * @param	...reset     需要传给服务端的参数
+	 * @param	reset     	 需要传给服务端的参数
 	 */
 	public static function send(actionName:int, type:int, ...reset):void
 	{

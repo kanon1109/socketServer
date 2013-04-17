@@ -49,7 +49,7 @@ def write_data(id, data):
     length = get_bytes_len(id) + get_bytes_len(data)
     print id, length, data
     ba = ByteArray()
-    ba.endian = '!'
+    ba.endian = "!"
     ba.writeInt(length)
     ba.writeInt(id)
     #print type(data)
@@ -65,7 +65,8 @@ def write_multi_data(id, params):
     for i in range(0, len(params)):
         length += get_bytes_len(params[i])
     ba = ByteArray()
-    ba.endian = '!'
+    #大端模式标准对齐方式  
+    ba.endian = "!"
     ba.writeInt(length)
     ba.writeInt(id)
     #根据data类型 写入ba
@@ -89,7 +90,14 @@ def write_data_in_bytes(byteArray, data):
 
 def read_data(data):
     ba = ByteArray(data)
+    #大端模式标准对齐方式
+    ba.endian = "!"
     length = ba.readInt()
+
+    print "length", length
+    
+    print "bytesAvailable", ba.bytesAvailable()
+    
     #业务大类
     actionName = ba.readByte()
     #具体业务类型
@@ -98,10 +106,18 @@ def read_data(data):
     print "actionName", actionName
     print "type", type
     
-    str = ba.readUTFBytes(1)
+    str = ba.readUTFBytes(3)
     print str
+   
+   
     i = ba.readInt()
     print i
+    
+
+    
+
+
+
     
    
     
@@ -111,6 +127,7 @@ def read_data(data):
 #data 需要获取长度的数据
 def get_bytes_len(data):
     b = ByteArray()
+    b.endian = "!"
     write_data_in_bytes(b, data)
     return len(b.data)
 
