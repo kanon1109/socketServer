@@ -112,16 +112,6 @@ def read_data(data):
    
     i = ba.readInt()
     print i
-    
-
-    
-
-
-
-    
-   
-    
-    
 
 #获取数据的字节长度
 #data 需要获取长度的数据
