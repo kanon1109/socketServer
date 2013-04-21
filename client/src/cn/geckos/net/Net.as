@@ -37,8 +37,6 @@ public class Net
 				//head:一个16为的整数表示之后字符串的字节数。
 				//body:字符串的字节流. (这里的汉字用3个字节表示)。
 				break;
-			case 2:
-				break;
 		}
 		Message.getInstance().execute(id, params);
 	}

@@ -24,9 +24,9 @@ public class SocketServer
 	private var reconnentTimer:Timer;
 	//重链秒数
 	private var reconnentDelay:int = 15;
-	//服务端和客户端协定的内容长度
-	private var dataLength:int;
-	//socket可读字节长度必须大于4个字节 （this.dataLength的字节长度）
+	//包体的长度
+	private var bodyLength:int;
+	//包头固定的长度
 	private var headLength:int = 4;
 	public function SocketServer(host:String, port:int) 
 	{
@@ -145,21 +145,22 @@ public class SocketServer
 		if (this.isConnected())
 		{		
 																		//||-----bytesAvailable-----||
-			//socket可读长度必须大于this.dataLength的字节长度		 	  ||---头---||-----内容-----||;
-			if (this.dataLength == 0 && this.socket.bytesAvailable >= this.headLength)
-				this.dataLength = this.socket.readInt(); //读出服务端和客户端协定的长度数据
+			//socket可读长度必须大于包头固定的长度					 	  ||---头---||-----内容-----||;
+			if (this.bodyLength == 0 && this.socket.bytesAvailable >= this.headLength)
+				this.bodyLength = this.socket.readInt(); //读出包头的内容，包头内容表示包体的长度
 				
-			//头字节读取完毕，并且缓冲区里的数据满足协商的长度
-			if (this.dataLength > 0 && this.socket.bytesAvailable >= this.dataLength)
+			//头字节读取完毕，并且缓冲区里的可读数据长度大于包体的长度
+			if (this.bodyLength > 0 && this.socket.bytesAvailable >= this.bodyLength)
 			{
 				var bytes:ByteArray = new ByteArray();
-				//将可读区域内this.dataLength长度内的字节读出。
-				this.socket.readBytes(bytes, 0, this.dataLength);
-				//长度归零
-				this.dataLength = 0;
+				//根据包体的长度读出包体的内容。
+				this.socket.readBytes(bytes, 0, this.bodyLength);
+				//包体长度归零
+				this.bodyLength = 0;
 				//获取数据
 				Net.getData(bytes);
-				//如果可读区域内还有字节未被读出。则继续执行方法。
+				//过网络中的字节流没有界线的，每次到达的缓冲区的数据，
+				//有可能不止一个数据包，因此需要继续执行。
 				if (this.socket.bytesAvailable >= this.headLength)
 					this.getSocketData();
 			}
