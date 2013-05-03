@@ -50,6 +50,7 @@ public class Net
 	public static function send(actionName:int, type:int, ...reset):void
 	{
 		var bytes:ByteArray = new ByteArray();
+		//只用了1位字节存储 长度-128 - 127
 		bytes.writeByte(actionName);
 		bytes.writeByte(type);
 		if (reset)

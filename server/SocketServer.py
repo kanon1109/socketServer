@@ -65,7 +65,7 @@ def write_multi_data(id, params):
     for i in range(0, len(params)):
         length += get_bytes_len(params[i])
     ba = ByteArray()
-    #大端模式标准对齐方式  
+    #大端模式标准对齐方式
     ba.endian = "!"
     ba.writeInt(length)
     ba.writeInt(id)
@@ -95,21 +95,22 @@ def read_data(data):
     length = ba.readInt()
 
     print "length", length
-    
+
     print "bytesAvailable", ba.bytesAvailable()
-    
+
+    #只用了1位字节存储 长度-128 - 127
     #业务大类
     actionName = ba.readByte()
     #具体业务类型
     type = ba.readByte()
-    
+
     print "actionName", actionName
     print "type", type
-    
+
     str = ba.readUTFBytes(3)
     print str
-   
-   
+
+
     i = ba.readInt()
     print i
 
